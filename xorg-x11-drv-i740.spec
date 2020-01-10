@@ -5,7 +5,7 @@
 Summary:   Xorg X11 i740 video driver
 Name:      xorg-x11-drv-i740
 Version:   1.3.2
-Release:   1.1%{?dist}
+Release:   2%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
@@ -19,7 +19,8 @@ ExcludeArch: s390 s390x
 BuildRequires: xorg-x11-server-sdk >= 1.3.0.0-6
 
 Requires:  hwdata
-Requires:  xorg-x11-server-Xorg >= 1.3.0.0-6
+Requires:  Xorg %(xserver-sdk-abi-requires ansic)
+Requires:  Xorg %(xserver-sdk-abi-requires videodrv)
 
 %description 
 X.Org X11 i740 video driver.
@@ -53,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/i740.4*
 
 %changelog
+* Tue Jun 28 2011 Ben Skeggs <bskeggs@redhat.com> - 1.3.2-2
+- rebuild for 6.2 server rebase
+
 * Mon Nov 30 2009 Dennis Gregorovic <dgregor@redhat.com> - 1.3.2-1.1
 - Rebuilt for RHEL 6
 
