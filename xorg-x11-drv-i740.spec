@@ -4,8 +4,8 @@
 
 Summary:   Xorg X11 i740 video driver
 Name:      xorg-x11-drv-i740
-Version:   1.3.2
-Release:   2%{?dist}
+Version:   1.3.4
+Release:   5%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
@@ -14,9 +14,11 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
 Source1:   i740.xinf
 
+Patch1:    fix-no-xaa.patch
+
 ExcludeArch: s390 s390x
 
-BuildRequires: xorg-x11-server-sdk >= 1.3.0.0-6
+BuildRequires: xorg-x11-server-sdk >= 1.10.99.902
 
 Requires:  hwdata
 Requires:  Xorg %(xserver-sdk-abi-requires ansic)
@@ -27,6 +29,7 @@ X.Org X11 i740 video driver.
 
 %prep
 %setup -q -n %{tarball}-%{version}
+%patch1 -p1 -b .xaa
 
 %build
 %configure --disable-static
@@ -54,6 +57,18 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/i740.4*
 
 %changelog
+* Tue Aug 29 2012 Jerome Glisse <jglisse@redhat.com> 1.3.4-5
+- Resolves: #835235
+
+* Wed Aug 22 2012 airlied@redhat.com - 1.3.4-3
+- rebuild for server ABI requires
+
+* Tue Aug 07 2012 Jerome Glisse <jglisse@redhat.com> 1.3.4-2
+- Fix unknown symbol
+
+* Mon Aug 06 2012 Jerome Glisse <jglisse@redhat.com> 1.3.4-1
+- latest upstream release 1.3.4
+
 * Tue Jun 28 2011 Ben Skeggs <bskeggs@redhat.com> - 1.3.2-2
 - rebuild for 6.2 server rebase
 
