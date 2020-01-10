@@ -5,33 +5,33 @@
 Summary:   Xorg X11 i740 video driver
 Name:      xorg-x11-drv-i740
 Version:   1.3.4
-Release:   5%{?dist}
+Release:   11%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
-Source1:   i740.xinf
-
-Patch1:    fix-no-xaa.patch
+Patch0: 0001-Remove-mibstore.h.patch
+Patch1: fix-no-xaa.patch
 
 ExcludeArch: s390 s390x
 
-BuildRequires: xorg-x11-server-sdk >= 1.10.99.902
+BuildRequires: xorg-x11-server-devel >= 1.10.99.902
+BuildRequires: autoconf automake libtool
 
-Requires:  hwdata
-Requires:  Xorg %(xserver-sdk-abi-requires ansic)
-Requires:  Xorg %(xserver-sdk-abi-requires videodrv)
+Requires: Xorg %(xserver-sdk-abi-requires ansic)
+Requires: Xorg %(xserver-sdk-abi-requires videodrv)
 
 %description 
 X.Org X11 i740 video driver.
 
 %prep
 %setup -q -n %{tarball}-%{version}
-%patch1 -p1 -b .xaa
+%patch0 -p1
+%patch1 -p1
 
 %build
+autoreconf -vif
 %configure --disable-static
 make
 
@@ -39,9 +39,6 @@ make
 rm -rf $RPM_BUILD_ROOT
 
 make install DESTDIR=$RPM_BUILD_ROOT
-
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/hwdata/videoaliases
-install -m 0644 %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/hwdata/videoaliases/
 
 # FIXME: Remove all libtool archives (*.la) from modules directory.  This
 # should be fixed in upstream Makefile.am or whatever.
@@ -53,27 +50,89 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %{driverdir}/i740_drv.so
-%{_datadir}/hwdata/videoaliases/i740.xinf
 %{_mandir}/man4/i740.4*
 
 %changelog
-* Tue Aug 29 2012 Jerome Glisse <jglisse@redhat.com> 1.3.4-5
-- Resolves: #835235
+* Thu Aug 07 2014 Adam Jackson <ajax@redhat.com> 1.3.4-11
+- Fix initialization
 
-* Wed Aug 22 2012 airlied@redhat.com - 1.3.4-3
-- rebuild for server ABI requires
+* Mon Apr 28 2014 Adam Jackson <ajax@redhat.com> - 1.3.4-10
+- Fix rhel arch list
 
-* Tue Aug 07 2012 Jerome Glisse <jglisse@redhat.com> 1.3.4-2
-- Fix unknown symbol
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.4-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
-* Mon Aug 06 2012 Jerome Glisse <jglisse@redhat.com> 1.3.4-1
-- latest upstream release 1.3.4
+* Thu Mar 07 2013 Dave Airlie <airlied@redhat.com> 1.3.4-8
+- autoreconf for aarch64
 
-* Tue Jun 28 2011 Ben Skeggs <bskeggs@redhat.com> - 1.3.2-2
-- rebuild for 6.2 server rebase
+* Thu Mar 07 2013 Peter Hutterer <peter.hutterer@redhat.com> - 1.3.4-7
+- require xorg-x11-server-devel, not -sdk
 
-* Mon Nov 30 2009 Dennis Gregorovic <dgregor@redhat.com> - 1.3.2-1.1
-- Rebuilt for RHEL 6
+* Thu Mar 07 2013 Peter Hutterer <peter.hutterer@redhat.com> - 1.3.4-6
+- ABI rebuild
+
+* Fri Feb 15 2013 Peter Hutterer <peter.hutterer@redhat.com> - 1.3.4-5
+- ABI rebuild
+
+* Fri Feb 15 2013 Peter Hutterer <peter.hutterer@redhat.com> - 1.3.4-4
+- ABI rebuild
+
+* Thu Jan 10 2013 Adam Jackson <ajax@redhat.com> - 1.3.4-3
+- ABI rebuild
+
+* Sun Jul 22 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.4-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jul 18 2012 Dave Airlie <airlied@redhat.com> 1.3.4-1
+- i740 1.3.4
+
+* Thu Apr 05 2012 Adam Jackson <ajax@redhat.com> - 1.3.2-17
+- RHEL arch exclude updates
+
+* Sat Feb 11 2012 Peter Hutterer <peter.hutterer@redhat.com> - 1.3.2-16
+- ABI rebuild
+
+* Fri Feb 10 2012 Peter Hutterer <peter.hutterer@redhat.com> - 1.3.2-15
+- ABI rebuild
+
+* Tue Jan 24 2012 Peter Hutterer <peter.hutterer@redhat.com> - 1.3.2-14
+- ABI rebuild
+
+* Wed Jan 04 2012 Peter Hutterer <peter.hutterer@redhat.com> - 1.3.2-13
+- Rebuild for server 1.12
+
+* Fri Dec 16 2011 Adam Jackson <ajax@redhat.com> - 1.3.2-12
+- Drop xinf file
+
+* Mon Nov 14 2011 Adam Jackson <ajax@redhat.com> - 1.3.2-11
+- ABI rebuild
+
+* Wed Nov 09 2011 ajax <ajax@redhat.com> - 1.3.2-10
+- ABI rebuild
+
+* Thu Aug 18 2011 Adam Jackson <ajax@redhat.com> - 1.3.2-9
+- Rebuild for xserver 1.11 ABI
+
+* Wed May 11 2011 Peter Hutterer <peter.hutterer@redhat.com> - 1.3.2-8
+- Rebuild for server 1.11
+
+* Mon Feb 28 2011 Peter Hutterer <peter.hutterer@redhat.com> - 1.3.2-7
+- Rebuild for server 1.10
+
+* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.2-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
+* Thu Dec 02 2010 Peter Hutterer <peter.hutterer@redhat.com> - 1.3.2-5
+- Rebuild for server 1.10
+
+* Wed Oct 27 2010 Adam Jackson <ajax@redhat.com> 1.3.2-4
+- Add ABI requires magic (#542742)
+
+* Mon Jul 05 2010 Peter Hutterer <peter.hutterer@redhat.com> - 1.3.2-3
+- rebuild for X Server 1.9
+
+* Thu Jan 21 2010 Peter Hutterer <peter.hutterer@redhat.com> - 1.3.2-2
+- Rebuild for server 1.8
 
 * Tue Aug 04 2009 Dave Airlie <airlied@redhat.com> 1.3.2-1
 - i740 1.3.2
