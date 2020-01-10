@@ -1,3 +1,4 @@
-# ELS - Enterprise Linux/EuroLinux Sources - xorg-x11-drv-i740 
+# ELS - Enterprise Linux/EuroLinux Sources - xorg-x11-drv-i740
+ 
 ## Usage:
-  Checkout branch or tag.
+  Checkout branch or tag. Use `make sources` to recreate  SOURCE0 archive.
