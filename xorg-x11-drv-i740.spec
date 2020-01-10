@@ -5,7 +5,7 @@
 Summary:   Xorg X11 i740 video driver
 Name:      xorg-x11-drv-i740
 Version:   1.3.4
-Release:   11%{?dist}
+Release:   12%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/i740.4*
 
 %changelog
+* Wed Nov 11 2015 Adam Jackson <ajax@redhat.com> - 1.3.4-12
+- Rebuild for server 1.17
+
 * Thu Aug 07 2014 Adam Jackson <ajax@redhat.com> 1.3.4-11
 - Fix initialization
 
